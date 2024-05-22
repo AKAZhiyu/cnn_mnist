@@ -99,11 +99,46 @@ class CNN(nn.Module):
 
         return predicted_label.item()
 
-model = CNN().to(device)
-# 加载保存的参数
-model.load_state_dict(torch.load('model_epoch_13.pth'))
+    def predict_image_from_array(self, img_array):
+        """
+        Perform image prediction from a preprocessed numpy array directly.
 
-# 将模型设置为评估模式
-model.eval()
-predicted_label = model.predict_image('4.png')
-print("Predicted label:", predicted_label)
+        Parameters:
+        - img_array: Preprocessed image as a numpy array.
+
+        Returns:
+        - predicted_label: The predicted category.
+        """
+        transform = transforms.Compose([
+            transforms.ToTensor(),
+            transforms.Normalize((0.1307,), (0.3081,))
+        ])
+
+        # # Convert numpy array to PIL Image for consistent preprocessing
+        # img = Image.fromarray(np.uint8(img_array * 255)).convert('L')
+
+        img_array = np.reshape(img_array, (28, 28))
+        input_tensor = transform(img_array).unsqueeze(0).float()  # Add batch dimension
+
+        # Determine the device automatically
+        device = next(self.parameters()).device
+        input_tensor = input_tensor.to(device)
+        self.to(device)
+
+        # Make a prediction
+        self.eval()
+        with torch.no_grad():
+            predictions = self(input_tensor)
+            _, predicted_label = torch.max(predictions, 1)
+
+        return predicted_label.item()
+
+if __name__ == "__main__":
+    model = CNN().to(device)
+    # 加载保存的参数
+    model.load_state_dict(torch.load('model_epoch_13.pth'))
+
+    # 将模型设置为评估模式
+    model.eval()
+    predicted_label = model.predict_image('test.png')
+    print("Predicted label:", predicted_label)

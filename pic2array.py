@@ -1,6 +1,14 @@
 import numpy as np
 from PIL import Image
 from NN import NeuralNetwork
+import torch_NN
+import torch
+import torch.nn as nn
+import torch.optim as optim
+from torchvision import datasets, transforms
+from torch.utils.data import DataLoader, ConcatDataset
+from PIL import Image
+import numpy as np
 
 def Normalization(dataset):
     temp = dataset - np.tile(dataset.min(), dataset.shape)
@@ -122,13 +130,17 @@ def GetCutZip(imagename):
 
 
 def recognize(src):
-    nn = NeuralNetwork([784, 250, 10], 'logistic')
+    #nn = NeuralNetwork([784, 250, 10], 'logistic')
+    nn = torch_NN.CNN().to("cuda" if torch.cuda.is_available() else "cpu")
+    nn.load_state_dict(torch.load('model_epoch_13.pth'))
+
     img_list = GetCutZip(src)
     final_result = ''
     for img_array in img_list:
         img_array = img_array.flatten()
-        result_list = nn.predict(img_array)
-        result = np.argmax(result_list)
+        # result_list = nn.predict_image_from_array(img_array)
+        # result = np.argmax(result_list)
+        result = nn.predict_image_from_array(img_array)
         final_result = final_result + str(result)
     return final_result
 
