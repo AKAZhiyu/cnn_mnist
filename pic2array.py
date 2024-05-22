@@ -2,7 +2,6 @@ import numpy as np
 from PIL import Image
 from NN import NeuralNetwork
 
-
 def Normalization(dataset):
     temp = dataset - np.tile(dataset.min(), dataset.shape)
     maxmatrix = np.tile(temp.max(), dataset.shape)
