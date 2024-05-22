@@ -1,6 +1,5 @@
 import numpy as np
 from PIL import Image
-from NN import NeuralNetwork
 import torch_NN
 import torch
 import torch.nn as nn
