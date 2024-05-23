@@ -45,8 +45,7 @@ class CNN(nn.Module):
             nn.ReLU(),
             nn.BatchNorm1d(128),
             nn.Dropout(0.4),
-            nn.Linear(128, 10),
-            nn.Softmax(dim=1)
+            nn.Linear(128, 10)
         )
 
     def forward(self, x):
@@ -136,7 +135,7 @@ class CNN(nn.Module):
 if __name__ == "__main__":
     model = CNN().to(device)
     # 加载保存的参数
-    model.load_state_dict(torch.load('model_epoch_13.pth'))
+    model.load_state_dict(torch.load('model_epoch_40.pth'))
 
     # 将模型设置为评估模式
     model.eval()
