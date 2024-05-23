@@ -4,70 +4,100 @@ from pygame.locals import *
 import math
 from pic2array import *
 import tkinter as tk
+from tkinter import filedialog
 
 
 def new_window(result):
+    # 创建一个新的Tkinter窗口实例
     root = tk.Tk()
+    # 设置窗口的标题
     root.title("识别结果")
 
+    # 设置窗口的大小和位置（宽450px, 高180px, 位于屏幕中央）
     root.geometry("450x180")
+
+    # 创建一个标签组件，用于显示识别的结果
+    # 参数说明：
+    # - text: 设置标签显示的文本，这里显示"识别结果:"加上函数参数result的值
+    # - font: 设置字体样式和大小，这里使用宋体，字号为40
+    # - fg: 设置字体颜色为白色
+    # - bg: 设置背景颜色为绿色
     theLabel = tk.Label(root, text="识别结果:{}".format(result), font=("宋体", 40), fg="white", bg="green")
 
+    # 将标签组件放置到窗口中，放置位置为顶部，并设置垂直外边距为40px
     theLabel.pack(side=tk.TOP, pady=40)
-    root.mainloop()
 
+    # 启动事件循环，显示窗口，并等待用户交互
+    root.mainloop()
 
 class Brush:
     def __init__(self, screen):
+        # 初始化Brush对象时需要一个pygame的屏幕对象（screen）
         self.screen = screen
+        # 默认画笔颜色为黑色
         self.color = (0, 0, 0)
+        # 默认画笔大小为10
         self.size = 10
+        # 标记是否在画画
         self.drawing = False
+        # 上一次画笔的位置
         self.last_pos = None
-        self.style = True
+        # 画笔的风格，True可能表示使用画刷图案，False为普通圆形笔触
+        self.style = False
+        # 载入画刷的图片
         self.brush = pygame.image.load("images/brush.png").convert_alpha()
-        self.brush_now = self.brush.subsurface((0, 0), (1, 1))
+        # 初始化当前使用的画笔图案，初始为图片的一个很小的部分
+        self.brush_now = self.brush.subsurface((0, 0), (20, 20))
 
     def start_draw(self, pos):
+        # 开始绘画，记录当前位置
         self.drawing = True
         self.last_pos = pos
 
     def end_draw(self):
+        # 结束绘画，更新绘画状态为False
         self.drawing = False
 
     def set_brush_style(self, style):
-        print("* set brush style to", style)
+        # 设置画笔的风格，并打印当前风格
         self.style = style
+        print("* set brush style to", style)
 
     def get_brush_style(self):
+        # 获取当前画笔风格
         return self.style
 
     def get_current_brush(self):
+        # 获取当前使用的画笔图案
         return self.brush_now
 
     def set_size(self, size):
+        # 设置画笔大小，限制在1到32之间，并调整当前使用的画笔图案的大小
         if size < 1:
             size = 1
         elif size > 32:
             size = 32
-        print("* set brush size to", size)
         self.size = size
+        print("* set brush size to", size)
         self.brush_now = self.brush.subsurface((0, 0), (size * 2, size * 2))
 
     def get_size(self):
+        # 获取当前画笔大小
         return self.size
 
     def set_color(self, color):
+        # 设置画笔颜色，并更新画笔图片的每个像素的颜色
         self.color = color
         for i in range(self.brush.get_width()):
             for j in range(self.brush.get_height()):
-                self.brush.set_at((i, j),
-                                  color + (self.brush.get_at((i, j)).a,))
+                self.brush.set_at((i, j), color + (self.brush.get_at((i, j)).a,))
 
     def get_color(self):
+        # 获取当前画笔颜色
         return self.color
 
     def draw(self, pos):
+        # 如果当前处于绘画状态，绘制从上一位置到当前位置的线条
         if self.drawing:
             for p in self._get_points(pos):
                 if p[0] in range(84, 790) and p[1] <= 530:
@@ -78,6 +108,7 @@ class Brush:
             self.last_pos = pos
 
     def _get_points(self, pos):
+        # 计算从上一点到当前点之间的所有点，用于连续绘画
         points = [(self.last_pos[0], self.last_pos[1])]
         len_x = pos[0] - self.last_pos[0]
         len_y = pos[1] - self.last_pos[1]
@@ -88,6 +119,7 @@ class Brush:
             points.append((points[-1][0] + step_x, points[-1][1] + step_y))
         points = map(lambda x: (int(0.5 + x[0]), int(0.5 + x[1])), points)
         return list(set(points))
+
 
 
 class Menu:
@@ -216,6 +248,7 @@ class Painter:
         self.brush = Brush(self.screen)
         self.menu = Menu(self.screen)
         self.menu.set_brush(self.brush)
+
 
     def run(self):
         self.screen.fill((255, 255, 255))

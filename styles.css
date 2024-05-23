@@ -1,0 +1,8 @@
+canvas {
+    border: 1px solid black;
+    cursor: crosshair;
+}
+
+button {
+    margin: 10px;
+}
