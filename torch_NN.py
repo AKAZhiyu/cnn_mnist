@@ -41,7 +41,7 @@ class CNN(nn.Module):
 
         self.fc_layers = nn.Sequential(
             nn.Flatten(),
-            nn.Linear(3136, 128),  # Adjust the input features to match the output from the last Conv2d
+            nn.Linear(3136, 128),
             nn.ReLU(),
             nn.BatchNorm1d(128),
             nn.Dropout(0.4),
