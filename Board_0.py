@@ -63,7 +63,7 @@ hue = 0
 font_style = ("Arial", 12, "bold")
 font_title = ("Arial", 24, "bold")
 
-title_label = tk.Label(root, text="手写数字识别系统", font=font_title)
+title_label = tk.Label(root, text="手写电话号码识别系统", font=font_title)
 title_label.pack(pady=(10, 0))
 
 subtitle_label = tk.Label(root, text="多数字识别 - 测试准确度 99.62%", font=("Arial", 16))
