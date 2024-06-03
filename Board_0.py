@@ -54,8 +54,8 @@ def animate_background():
     root.after(50, animate_background)
 
 root = tk.Tk()
-root.title("手写数字识别系统")
-root.geometry("800x650")  # Adjusted for wider canvas
+root.title("手写电话号码识别系统")
+root.geometry("1000x650")  # Adjusted root size for a longer canvas
 root.resizable(False, False)
 
 hue = 0
@@ -69,7 +69,7 @@ title_label.pack(pady=(10, 0))
 subtitle_label = tk.Label(root, text="多数字识别 - 测试准确度 99.62%", font=("Arial", 16))
 subtitle_label.pack(pady=(0, 10))
 
-canvas = tk.Canvas(root, width=600, height=400, bg='white')  # Increased width
+canvas = tk.Canvas(root, width=800, height=400, bg='white')  # Increased width for more space to write numbers
 canvas.pack(pady=10)
 canvas.bind("<B1-Motion>", draw)
 

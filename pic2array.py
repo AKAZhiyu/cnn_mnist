@@ -8,6 +8,8 @@ from torchvision import datasets, transforms
 from torch.utils.data import DataLoader, ConcatDataset
 from PIL import Image
 import numpy as np
+import matplotlib.pyplot as plt
+
 
 def Normalization(dataset):
     temp = dataset - np.tile(dataset.min(), dataset.shape)
@@ -125,13 +127,25 @@ def GetCutZip(imagename):
         final_array[high:high + height, left:left + width] = zip_img_array
         final_array = Normalization(final_array)
         final_list.append(final_array)
+
     return final_list
+
+
+def printSegmentedImages(image_list):
+    # 显示final_list中的图像
+    for i, array in enumerate(image_list):
+        plt.imshow(array, cmap='gray')
+        plt.title(f'Image {i + 1}')
+        plt.show()
+    return
 
 
 def recognize(src):
     nn = torch_NN.CNN().to("cuda" if torch.cuda.is_available() else "cpu")
-    nn.load_state_dict(torch.load('model_epoch_40.pth'))
-
+    if torch.cuda.is_available():
+        nn.load_state_dict(torch.load('model_epoch_40.pth'))
+    else:
+        nn.load_state_dict(torch.load('model_epoch_40.pth', map_location=torch.device('cpu')))
     img_list = GetCutZip(src)
     final_result = ''
     for img_array in img_list:
