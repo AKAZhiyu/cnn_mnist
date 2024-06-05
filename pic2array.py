@@ -9,7 +9,7 @@ from torch.utils.data import DataLoader, ConcatDataset
 from PIL import Image
 import numpy as np
 import matplotlib.pyplot as plt
-
+from emsemble import ensemble_predict
 
 def Normalization(dataset):
     temp = dataset - np.tile(dataset.min(), dataset.shape)
@@ -141,21 +141,37 @@ def printSegmentedImages(image_list):
 
 
 def recognize(src):
-    nn = torch_NN.CNN().to("cuda" if torch.cuda.is_available() else "cpu")
-    if torch.cuda.is_available():
-        nn.load_state_dict(torch.load('model_epoch_40.pth'))
-    else:
-        nn.load_state_dict(torch.load('model_epoch_40.pth', map_location=torch.device('cpu')))
+
+    # nn = torch_NN.CNN().to("cuda" if torch.cuda.is_available() else "cpu")
+    # if torch.cuda.is_available():
+    #     nn.load_state_dict(torch.load('model_epoch_40.pth'))
+    # else:
+    #     nn.load_state_dict(torch.load('model_epoch_40.pth', map_location=torch.device('cpu')))
+
+    # import joblib
+    # loaded_model = joblib.load('mnist_log_reg_model.joblib')
+
     img_list = GetCutZip(src)
     final_result = ''
+    # printSegmentedImages(img_list)
     for img_array in img_list:
-        img_array = img_array.flatten()
-        result = nn.predict_image_from_array(img_array)
+        # img_array = img_array.flatten().reshape(1, 784)
+        # result = loaded_model.predict(img_array)
+        # final_result = final_result + str(result[0][0])
+        # np.save('saved_array.npy', img_array)
+
+        # img_array = img_array.flatten()
+        # result = nn.predict_image_from_array(img_array)
+        # final_result = final_result + str(result)
+
+        result = ensemble_predict(img_array)
         final_result = final_result + str(result)
     return final_result
 
 
 if __name__ == "__main__":
-    img_path = input("请输入图片路径:\n")
+    # img_path = input("请输入图片路径:\n")
+    img_path = "to_recognize.png"
     final_result = recognize(img_path)
     print("识别的最终结果是:" + final_result)
+

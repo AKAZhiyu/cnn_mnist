@@ -121,6 +121,7 @@ class CNN(nn.Module):
 
         # Determine the device automatically
         device = next(self.parameters()).device
+
         input_tensor = input_tensor.to(device)
         self.to(device)
 
