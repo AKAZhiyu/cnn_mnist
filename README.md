@@ -31,14 +31,17 @@
 ## 使用指南
 请参阅项目中的 `.ipynb` 笔记本文件，其中包含了各模型的训练过程和详细的代码说明。每个笔记本都详细描述了数据处理、模型建立、训练及验证步骤。
 ### 命令行使用示例
-1. **识别图片中的手写数字**
+#### **识别图片中的手写数字**
    ```bash
    python pic2array.py /path/to/image --recognize
-![Err](demo/recognize.png)
+   ```
 输出识别的数字，如`12345`。
-2. **将图片分割成二进制文件**
+![Err](demo/recognize.png)
+
+#### **将图片分割成二进制文件**
    ```bash
    python pic2array.py /path/to/image --segment
+   ```
 输出将显示生成的二进制文件数量。例如，如果输出为 5，则表示已成功创建 5 个二进制文件。
 ![Err](demo/segment.png)
 ### 本地使用示例
