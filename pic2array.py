@@ -10,6 +10,9 @@ from PIL import Image
 import numpy as np
 import matplotlib.pyplot as plt
 from emsemble import ensemble_predict
+import sys
+import argparse
+
 
 def Normalization(dataset):
     temp = dataset - np.tile(dataset.min(), dataset.shape)
@@ -140,6 +143,15 @@ def printSegmentedImages(image_list):
     return
 
 
+def SegmentedImages(image_path):
+    img_list = GetCutZip(image_path)
+    # 遍历数组，为每个 (28, 28) 的子数组创建一个二进制文件
+    for i, array in enumerate(img_list):
+        filename = f'image_{i}.bin'
+        array.tofile(filename)
+    return len(img_list)
+
+
 def recognize(src):
 
     # nn = torch_NN.CNN().to("cuda" if torch.cuda.is_available() else "cpu")
@@ -169,9 +181,27 @@ def recognize(src):
     return final_result
 
 
-if __name__ == "__main__":
-    # img_path = input("请输入图片路径:\n")
-    img_path = "to_recognize.png"
-    final_result = recognize(img_path)
-    print("识别的最终结果是:" + final_result)
+# if __name__ == "__main__":
+#     # img_path = input("请输入图片路径:\n")
+#     img_path = "to_recognize.png"
+#     final_result = recognize(img_path)
+#     print("识别的最终结果是:" + final_result)
+def main():
+    parser = argparse.ArgumentParser(description="处理图片的命令行工具")
+    parser.add_argument("image_path", type=str, help="图片的路径")
+    parser.add_argument("--recognize", action="store_true", help="识别图片并返回字符串")
+    parser.add_argument("--segment", action="store_true", help="将图片分割成多个二进制文件")
 
+    args = parser.parse_args()
+
+    if args.recognize:
+        result = recognize(args.image_path)
+        print(result)
+
+    if args.segment:
+        num = SegmentedImages(args.image_path)
+        print(num)
+
+
+if __name__ == "__main__":
+    main()
