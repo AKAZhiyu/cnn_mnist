@@ -53,7 +53,7 @@ def ensemble_predict(data):
     ]
 
     # Debugging output
-    print(f"Predictions from all models with weights: {[(pred, weights[model]) for model, pred in predictions]}")
+    # print(f"Predictions from all models with weights: {[(pred, weights[model]) for model, pred in predictions]}")
 
     # 加权投票
     vote_counts = defaultdict(float)
